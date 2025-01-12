@@ -5,6 +5,8 @@ import { Planet } from '@/models';
 import { IDBPlanet } from '@/types/models/planet';
 import { Types } from 'mongoose';
 import { PlanetType } from '@/types/shared/planetTypes';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 
 interface LeanPlanet {
   _id: Types.ObjectId;
@@ -33,6 +35,11 @@ interface LeanPlanet {
 }
 
 export async function getDBPlanets(): Promise<IDBPlanet[]> {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
   try {
     await connectDB()
     const dbPlanets = await Planet.find({})
@@ -63,6 +70,11 @@ export async function getDBPlanets(): Promise<IDBPlanet[]> {
   }
 }
 export async function getPlanetsForCanvas(): Promise<IDBPlanet[]> {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
   try {
     await connectDB();
     const planets = await Planet.find({})
@@ -82,6 +94,11 @@ export async function getPlanetsForCanvas(): Promise<IDBPlanet[]> {
 }
 
 export async function getPlanetWithStations(type: PlanetType): Promise<IDBPlanet | null> {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
   try {
     await connectDB();
     const planet = await Planet.findOne({ type })

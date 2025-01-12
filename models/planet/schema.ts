@@ -36,7 +36,6 @@ const PlanetSchema = new Schema<IPlanet>(
   }
 );
 
-PlanetSchema.index({ order: 1 });
 PlanetSchema.index({ type: 1 });
 
 export default PlanetSchema;
