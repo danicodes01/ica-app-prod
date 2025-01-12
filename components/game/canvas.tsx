@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { GameRenderer } from '@/lib/game/renderer';
 import { useGameStore } from '@/store/useGameStore';
 import IntroCrawl from './intro-crawl';
@@ -19,7 +19,13 @@ export const GAME_COLORS = {
 
 export default function GameCanvas() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/login');
+    },
+  });
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<GameRenderer | null>(null);
   const mouseMovingTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -43,6 +49,8 @@ export default function GameCanvas() {
   } = useGameStore();
 
   console.log(planets, "in canvas")
+
+  
   // Handle intro visibility
   useEffect(() => {
     if (session?.user?.email) {
@@ -105,19 +113,22 @@ export default function GameCanvas() {
     if (session?.user?.email) {
       sessionStorage.setItem(`hasSeenIntro-${session.user.email}`, 'true');
       
-      let opacity = 0;
-      const fadeInterval = setInterval(() => {
-        opacity += 0.05;
-        setCanvasOpacity(opacity);
-        
-        if (opacity >= 1) {
-          clearInterval(fadeInterval);
-          setShowIntro(false);
-          setIntroComplete(true);
-        }
-      }, 50);
+      // Add 500ms delay before starting the fade
+      setTimeout(() => {
+        let opacity = 0;
+        const fadeInterval = setInterval(() => {
+          opacity += 0.05;
+          setCanvasOpacity(opacity);
+          
+          if (opacity >= 1) {
+            clearInterval(fadeInterval);
+            setShowIntro(false);
+            setIntroComplete(true);
+          }
+        }, 50);
+      }, 500);
     }
-  }, [session, setCanvasOpacity, setIntroComplete]);
+    }, [session, setCanvasOpacity, setIntroComplete]);
 
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!canvasRef.current) return;
@@ -235,7 +246,9 @@ export default function GameCanvas() {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [handleCanvasClick, handleMouseMove, showIntro]);
-
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="fixed inset-0 bg-black">
       {showIntro && (

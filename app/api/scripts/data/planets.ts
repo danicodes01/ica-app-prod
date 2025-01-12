@@ -37,7 +37,7 @@ export const planets: IPlanet[] = [
         xpReward: 75,
         currencyReward: 150,
         challenge: {
-          instructions: 'Create an array called `fruits` with three string elements and an object called `person` with properties name and age.',
+          instructions: 'Create an array or list called `fruits` with three string elements and an object called `person` with properties name and age.',
           initialCode: 'let fruits = [];\nlet person = {};',
           testCases: [
             { 
@@ -53,62 +53,11 @@ export const planets: IPlanet[] = [
     ],
   },
   {
-    name: 'Function Galaxy',
-    type: 'chromanova',
-    description: 'Master JavaScript functions and problem-solving.',
-    requiredXP: 200,
-    order: 2,
-    stations: [
-      {
-        _id: new Types.ObjectId(),
-        stationId: new Types.ObjectId(),
-        name: 'Function Basics',
-        description: 'Learn to write and use functions effectively.',
-        order: 1,
-        xpReward: 100,
-        currencyReward: 200,
-        challenge: {
-          instructions: 'Write a function called `calculateArea` that takes width and height parameters and returns their product.',
-          initialCode: 'function calculateArea(width, height) {\n  // Your code here\n}',
-          testCases: [
-            { 
-              input: [5, 3],
-              expectedOutput: 15
-            },
-            {
-              input: [2, 4],
-              expectedOutput: 8
-            }
-          ],
-        },
-      },
-      {
-        _id: new Types.ObjectId(),
-        stationId: new Types.ObjectId(),
-        name: 'Array Methods',
-        description: 'Master array methods and transformations.',
-        order: 2,
-        xpReward: 125,
-        currencyReward: 250,
-        challenge: {
-          instructions: 'Write a function that filters an array to only include even numbers.',
-          initialCode: 'function filterEvenNumbers(numbers) {\n  // Your code here\n}',
-          testCases: [
-            { 
-              input: [1, 2, 3, 4, 5, 6],
-              expectedOutput: [2, 4, 6]
-            }
-          ],
-        },
-      },
-    ],
-  },
-  {
-    name: 'Logic Lab',
+    name: 'SYNTAXIA',
     type: 'syntaxia',
     description: 'Explore conditional logic and control flow.',
     requiredXP: 500,
-    order: 3,
+    order: 2,
     stations: [
       {
         _id: new Types.ObjectId(),
@@ -159,9 +108,60 @@ export const planets: IPlanet[] = [
     ],
   },
   {
-    name: 'Algorithm Arena',
+    name: 'CHROMANOVA',
+    type: 'chromanova',
+    description: 'Master functions and problem-solving.',
+    requiredXP: 200,
+    order: 3,
+    stations: [
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Function Basics',
+        description: 'Learn to write and use functions effectively.',
+        order: 1,
+        xpReward: 100,
+        currencyReward: 200,
+        challenge: {
+          instructions: 'Write a function called `calculateArea` that takes width and height parameters and returns their product.',
+          initialCode: 'function calculateArea(width, height) {\n  // Your code here\n}',
+          testCases: [
+            { 
+              input: [5, 3],
+              expectedOutput: 15
+            },
+            {
+              input: [2, 4],
+              expectedOutput: 8
+            }
+          ],
+        },
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Array Methods',
+        description: 'Master array methods and transformations.',
+        order: 2,
+        xpReward: 125,
+        currencyReward: 250,
+        challenge: {
+          instructions: 'Write a function that filters an array to only include even numbers.',
+          initialCode: 'function filterEvenNumbers(numbers) {\n  // Your code here\n}',
+          testCases: [
+            { 
+              input: [1, 2, 3, 4, 5, 6],
+              expectedOutput: [2, 4, 6]
+            }
+          ],
+        },
+      },
+    ],
+  },
+  {
+    name: 'QUANTUMCORE',
     type: 'quantumCore',
-    description: 'Tackle advanced algorithms and data structures.',
+    description: 'Where quantum algorithms and data science solve complex problems',
     requiredXP: 1000,
     order: 4,
     stations: [

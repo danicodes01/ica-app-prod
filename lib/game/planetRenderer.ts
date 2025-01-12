@@ -16,20 +16,21 @@ export const PLANET_CONFIG = {
     description: 'Central hub for learning and progress',
     requiredXP: 0,
   },
-  chromanova: {
-    id: 'chromanova',
-    name: 'Chromanova',
-    type: 'chromanova' as const,
-    description: 'Master UI/UX & frontend systems',
-    requiredXP: 100,
-  },
   syntaxia: {
     id: 'syntaxia',
     name: 'Syntaxia',
     type: 'syntaxia' as const,
     description: 'Core systems & algorithms',
+    requiredXP: 100,
+  },
+  chromanova: {
+    id: 'chromanova',
+    name: 'Chromanova',
+    type: 'chromanova' as const,
+    description: 'Master UI/UX & frontend systems',
     requiredXP: 250,
   },
+
   quantumCore: {
     id: 'quantumCore',
     name: 'Quantum Core',

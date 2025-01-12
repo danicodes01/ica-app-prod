@@ -40,6 +40,6 @@ const UserProgressSchema = new Schema<IUserProgressDocument>(
   }
 );
 
-UserProgressSchema.index({ userId: 1, planetType: 1, stationOrder: 1 }, { unique: true });
+// UserProgressSchema.index({ userId: 1, planetType: 1, stationOrder: 1 }, { unique: true });
 
 export default UserProgressSchema

@@ -1,6 +1,9 @@
-import { PlanetPosition } from "@/types/game/canvas";
+import { PlanetPosition } from '@/types/game/canvas';
 
-export const calculatePlanetPositions = (width: number, height: number): PlanetPosition[] => {
+export const calculatePlanetPositions = (
+  width: number,
+  height: number,
+): PlanetPosition[] => {
   const centerX = width / 2;
   const centerY = height / 2;
   const baseRadius = Math.min(width, height) * 0.05;
@@ -12,12 +15,12 @@ export const calculatePlanetPositions = (width: number, height: number): PlanetP
       radius: baseRadius * 1.2,
     },
     {
-      x: centerX - width * 0.25,
+      x: centerX + width * 0.25,
       y: centerY,
       radius: baseRadius * 1.1,
     },
     {
-      x: centerX + width * 0.25,
+      x: centerX - width * 0.25,
       y: centerY,
       radius: baseRadius * 1.1,
     },

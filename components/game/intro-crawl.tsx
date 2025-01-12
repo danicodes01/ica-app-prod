@@ -40,8 +40,9 @@ const DURATION_BREAKPOINTS: ScreenBreakpoint[] = [
   { maxWidth: 400, duration: 61000 },
   { maxWidth: 600, duration: 45000 },
   { maxWidth: 800, duration: 40000 },
-  { maxWidth: 1000, duration: 36000 },
-  { maxWidth: 1440, duration: 37000 },
+  { maxWidth: 1000, duration: 37000 },
+  { maxWidth: 1200, duration: 40000 },
+  { maxWidth: 1440, duration: 39000 },
 ];
 
 function calculateFadeDuration(width: number, height: number): number {
