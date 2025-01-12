@@ -1,21 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Ubuntu:wght@300;400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #3c3c4399;
+    --background: #f2f2f7ff;
+    --gradient-nav: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(30, 30, 30, 0.9) 50%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    --link: #5ac8faff;
+    --blur-rgb: 0, 0, 0;
+    --game-text: #ffd700ff;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+  
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground: #ebebf599;
+      --background: #1c1c1eff;
+      --gradient-nav: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(245, 245, 245, 0.9) 50%,
+        rgba(255, 255, 255, 1) 100%
+      );
+      --link: #64d2ffff;
+      --blur-rgb: 255, 255, 255;
+      --game-text: #ffc107ff;
+    }
+  }
+  
+  html {
+    font-family: 'Press Start 2P', serif;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  .fixed {
+    position: fixed;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .h-full {
+    height: 100%;
+  }
+  
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  
+  body {
+    color: var(--foreground);
+    background: linear-gradient(to bottom, transparent, var(--background)) var(--background);
+    margin: 0;
+  }

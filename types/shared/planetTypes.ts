@@ -1,0 +1,1 @@
+export type PlanetType = 'missionControl' | 'chromanova' | 'syntaxia' | 'quantumCore';
