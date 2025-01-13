@@ -1,7 +1,7 @@
 import { Document, Model, Types } from 'mongoose';
+import { ProgressStatus } from '../shared/planetTypes';
 
 type PlanetType = 'missionControl' | 'chromanova' | 'syntaxia' | 'quantumCore';
-type ProgressStatus = 'LOCKED' | 'IN_PROGRESS' | 'COMPLETED';
 
 export interface IUserProgress {
   userId: Types.ObjectId;
@@ -14,6 +14,21 @@ export interface IUserProgress {
   completedAt?: Date;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
+}
+
+// Add to types/models/userProgress.ts
+export interface ISerializedUserProgress {
+  _id: string;
+  userId: string;
+  planetType: PlanetType;
+  stationOrder: number;
+  status: ProgressStatus;
+  currentAttempts: number;
+  timesCompleted: number;
+  lastAttemptAt?: string;
+  completedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IUserProgressDocument extends IUserProgress, Document {
