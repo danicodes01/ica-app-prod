@@ -1,0 +1,102 @@
+.container {
+    padding: 1.5rem;
+  }
+  
+  .header {
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .description {
+    margin-bottom: 0.5rem;
+  }
+  
+  .lockMessage {
+    color: #ef4444;
+  }
+  
+  .stationsGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 768px) {
+    .stationsGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .stationsGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .stationCard {
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .stationCard.completed {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+  }
+  
+  .stationCard.inProgress {
+    border-color: #eab308;
+    background-color: #fefce8;
+  }
+  
+  .stationCard.locked {
+    opacity: 0.5;
+    filter: blur(2px);
+    cursor: not-allowed;
+  }
+  
+  .stationCard.available:hover {
+    border-color: #60a5fa;
+    cursor: pointer;
+  }
+  
+  .stationTitle {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stationDescription {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .rewardsContainer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+  }
+  
+  .xpReward {
+    color: #2563eb;
+  }
+  
+  .currencyReward {
+    color: #7c3aed;
+  }
+  
+  .lockMessage {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #ef4444;
+  }
+  
+  .progressInfo {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
