@@ -334,119 +334,300 @@ export const planets: IPlanet[] = [
   {
     name: 'CHROMANOVA',
     type: 'chromanova',
-    description: 'Master functions and problem-solving.',
-    requiredXP: 450,
+    description: 'Master advanced array methods and data transformation.',
+    requiredXP: 1300, 
     order: 3,
     stations: [
       {
         _id: new Types.ObjectId(),
         stationId: new Types.ObjectId(),
-        name: 'Function Basics',
-        description: 'Learn to write and use functions effectively.',
+        name: 'forEach Method',
+        description: 'Learn to iterate over arrays using forEach.',
         order: 1,
-        xpReward: 100,
-        currencyReward: 200,
+        xpReward: 250,
+        currencyReward: 500,
         challenge: {
-          instructions:
-            'Write a function named `calculateArea` that accepts two parameters, `width` and `height`, and returns their product.',
-          initialCode: '// Define your calculateArea function here',
+          instructions: 'Write a function named `logCrewMembers` that takes an array of crew member names and logs each name to the console using the forEach method.',
+          initialCode: '// Write your logCrewMembers function here',
           type: 'function',
           testCases: [
             {
-              input: [5, 3],
-              expectedOutput: 15,
-              description:
-                'The function should return the area of a rectangle with width 5 and height 3.',
-            },
-            {
-              input: [2, 4],
-              expectedOutput: 8,
-              description:
-                'The function should return the area of a rectangle with width 2 and height 4.',
-            },
-          ],
-        },
+              input: [['John', 'Sarah', 'Mike']],
+              expectedOutput: null,
+              description: 'Should log each crew member name'
+            }
+          ]
+        }
       },
       {
         _id: new Types.ObjectId(),
         stationId: new Types.ObjectId(),
-        name: 'Array Methods',
-        description: 'Master array methods and transformations.',
+        name: 'Filter Method',
+        description: 'Practice filtering arrays based on conditions.',
         order: 2,
-        xpReward: 125,
-        currencyReward: 250,
+        xpReward: 300,
+        currencyReward: 600,
         challenge: {
-          instructions:
-            'Write a function named `filterEvenNumbers` that takes an array of numbers as input and returns a new array containing only the even numbers.',
-          initialCode: '// Define your filterEvenNumbers function here',
+          instructions: 'Write a function named `filterLargePlanets` that takes an array of planet objects, each with a `name` and `size` property, and returns an array of planets where `size` is greater than 10,000.',
+          initialCode: '// Write your filterLargePlanets function here',
           type: 'function',
           testCases: [
             {
-              input: [1, 2, 3, 4, 5, 6],
-              expectedOutput: [2, 4, 6],
-              description:
-                'The function should return an array of even numbers from the input array.',
-            },
-          ],
-        },
+              input: [[
+                { name: 'Jupiter', size: 15000 },
+                { name: 'Mars', size: 5000 },
+                { name: 'Saturn', size: 12000 }
+              ]],
+              expectedOutput: [
+                { name: 'Jupiter', size: 15000 },
+                { name: 'Saturn', size: 12000 }
+              ],
+              description: 'Should return only planets with size > 10000'
+            }
+          ]
+        }
       },
-    ],
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Map Method',
+        description: 'Transform array elements using map.',
+        order: 3,
+        xpReward: 350,
+        currencyReward: 700,
+        challenge: {
+          instructions: 'Write a function named `getPlanetNames` that takes an array of planet objects (each with a `name` property) and returns an array of planet names.',
+          initialCode: '// Write your getPlanetNames function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[
+                { name: 'Mars', distance: 2 },
+                { name: 'Venus', distance: 1 }
+              ]],
+              expectedOutput: ['Mars', 'Venus'],
+              description: 'Should extract only the planet names'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Reduce Method',
+        description: 'Learn to use reduce for array calculations.',
+        order: 4,
+        xpReward: 400,
+        currencyReward: 800,
+        challenge: {
+          instructions: 'Write a function named `calculateTotalDistance` that takes an array of distances (in lightyears) and returns the total distance.',
+          initialCode: '// Write your calculateTotalDistance function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[1.5, 2.7, 3.2]],
+              expectedOutput: 7.4,
+              description: 'Should sum all distances'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Nested Arrays',
+        description: 'Master working with nested array structures.',
+        order: 5,
+        xpReward: 450,
+        currencyReward: 900,
+        challenge: {
+          instructions: 'Write a function named `printStarSystems` that takes an array of star systems, where each star system is an array of planet names, and logs each planet\'s name grouped by its star system.',
+          initialCode: '// Write your printStarSystems function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[['Earth', 'Mars'], ['Alpha', 'Beta']]],
+              expectedOutput: null,
+              description: 'Should log planets grouped by star system'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Array Sorting',
+        description: 'Learn to sort complex array structures.',
+        order: 6,
+        xpReward: 500,
+        currencyReward: 1000,
+        challenge: {
+          instructions: 'Write a function named `sortPlanetsByDistance` that takes an array of planet objects, each with a `name` and `distance` property, and returns the array sorted by `distance` in ascending order.',
+          initialCode: '// Write your sortPlanetsByDistance function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[
+                { name: 'Mars', distance: 2 },
+                { name: 'Venus', distance: 1 },
+                { name: 'Jupiter', distance: 5 }
+              ]],
+              expectedOutput: [
+                { name: 'Venus', distance: 1 },
+                { name: 'Mars', distance: 2 },
+                { name: 'Jupiter', distance: 5 }
+              ],
+              description: 'Should sort planets by distance'
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     name: 'QUANTUMCORE',
     type: 'quantumCore',
-    description:
-      'Where quantum algorithms and data science solve complex problems',
-    requiredXP: 675,
+    description: 'Master advanced algorithms and data structures.',
+    requiredXP: 3550, 
     order: 4,
     stations: [
       {
         _id: new Types.ObjectId(),
         stationId: new Types.ObjectId(),
-        name: 'Recursion',
-        description: 'Master recursive problem-solving techniques.',
+        name: 'Recursive Factorial',
+        description: 'Learn recursive problem-solving with factorial calculation.',
         order: 1,
-        xpReward: 200,
-        currencyReward: 400,
+        xpReward: 500,
+        currencyReward: 1000,
         challenge: {
-          instructions:
-            'Write a recursive function named `fibonacci` that takes a number `n` and returns the nth Fibonacci number.',
-          initialCode: '// Define your fibonacci function here',
-          type: 'algorithm',
+          instructions: 'Write a function named `calculateFactorial` that takes a number `n` and returns its factorial using recursion.',
+          initialCode: '// Write your calculateFactorial function here',
+          type: 'function',
           testCases: [
             {
-              input: 6,
-              expectedOutput: 8,
-              description:
-                'The function should return the 6th Fibonacci number, which is 8.',
+              input: [5],
+              expectedOutput: 120,
+              description: 'Should calculate 5! = 120'
             },
-          ],
-        },
+            {
+              input: [0],
+              expectedOutput: 1,
+              description: 'Should handle 0! = 1'
+            }
+          ]
+        }
       },
       {
         _id: new Types.ObjectId(),
         stationId: new Types.ObjectId(),
-        name: 'Sorting Algorithms',
-        description: 'Implement and understand sorting algorithms.',
+        name: 'Binary Search',
+        description: 'Implement efficient searching algorithm.',
         order: 2,
-        xpReward: 250,
-        currencyReward: 500,
+        xpReward: 600,
+        currencyReward: 1200,
         challenge: {
-          instructions:
-            'Write a function named `bubbleSort` that sorts an array of numbers in ascending order using the bubble sort algorithm.',
-          initialCode: 'function bubbleSort(arr) {\n  // Your code here\n}',
-          type: 'algorithm',
+          instructions: 'Write a function named `binarySearch` that takes a sorted array of numbers and a target number. Return the index of the target number, or -1 if it is not found.',
+          initialCode: '// Write your binarySearch function here',
+          type: 'function',
           testCases: [
             {
-              input: [64, 34, 25, 12, 22, 11, 90],
-              expectedOutput: [11, 12, 22, 25, 34, 64, 90],
-              description:
-                'The function should correctly sort the array [64, 34, 25, 12, 22, 11, 90] in ascending order.',
+              input: [[1, 2, 3, 4, 5, 6], 4],
+              expectedOutput: 3,
+              description: 'Should find index 3 for target 4'
             },
-          ],
-        },
+            {
+              input: [[1, 2, 3, 4, 5], 6],
+              expectedOutput: -1,
+              description: 'Should return -1 for missing target'
+            }
+          ]
+        }
       },
-    ],
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Merge Sort',
+        description: 'Implement the merge sort algorithm.',
+        order: 3,
+        xpReward: 700,
+        currencyReward: 1400,
+        challenge: {
+          instructions: 'Write a function named `mergeSort` that takes an array and returns it sorted in ascending order using the merge sort algorithm. You can define helper functions if needed.',
+          initialCode: '// Write your mergeSort and any helper functions here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[64, 34, 25, 12, 22, 11, 90]],
+              expectedOutput: [11, 12, 22, 25, 34, 64, 90],
+              description: 'Should sort array in ascending order'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'BFS Traversal',
+        description: 'Learn breadth-first graph traversal.',
+        order: 4,
+        xpReward: 800,
+        currencyReward: 1600,
+        challenge: {
+          instructions: 'Write a function named `bfsTraversal` that takes an adjacency list representing a graph and a starting node. Return an array of nodes visited in BFS order.',
+          initialCode: '// Write your bfsTraversal function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [{ 'A': ['B', 'C'], 'B': ['D'], 'C': ['D'], 'D': [] }, 'A'],
+              expectedOutput: ['A', 'B', 'C', 'D'],
+              description: 'Should traverse graph in BFS order'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'DFS Traversal',
+        description: 'Master depth-first graph traversal.',
+        order: 5,
+        xpReward: 900,
+        currencyReward: 1800,
+        challenge: {
+          instructions: 'Write a function named `dfsTraversal` that takes an adjacency list representing a graph and a starting node. Return an array of nodes visited in DFS order.',
+          initialCode: '// Write your dfsTraversal function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [{ 'A': ['B', 'C'], 'B': ['D'], 'C': ['D'], 'D': [] }, 'A'],
+              expectedOutput: ['A', 'B', 'D', 'C'],
+              description: 'Should traverse graph in DFS order'
+            }
+          ]
+        }
+      },
+      {
+        _id: new Types.ObjectId(),
+        stationId: new Types.ObjectId(),
+        name: 'Dynamic Programming',
+        description: 'Solve optimization problems using dynamic programming.',
+        order: 6,
+        xpReward: 1000,
+        currencyReward: 2000,
+        challenge: {
+          instructions: 'Write a function named `longestIncreasingSubsequence` that takes an array of numbers and returns the length of the longest increasing subsequence.',
+          initialCode: '// Write your longestIncreasingSubsequence function here',
+          type: 'function',
+          testCases: [
+            {
+              input: [[10, 9, 2, 5, 3, 7, 101, 18]],
+              expectedOutput: 4,
+              description: 'Should find length of longest increasing subsequence'
+            }
+          ]
+        }
+      }
+    ]
   },
 ];
 
