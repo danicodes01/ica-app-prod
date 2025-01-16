@@ -2,7 +2,7 @@
 
 import connectDB from '@/lib/db/mongoose';
 import { Planet } from '@/models';
-import { IDBPlanet } from '@/types/models/planet';
+import { ChallengeType, IDBPlanet } from '@/types/models/planet';
 import { Types } from 'mongoose';
 import { PlanetType } from '@/types/shared/planetTypes';
 import { getServerSession } from 'next-auth/next';
@@ -26,9 +26,11 @@ interface LeanPlanet {
     challenge: {
       instructions: string;
       initialCode: string;
+      type?: ChallengeType; 
       testCases: {
         input: unknown;
         expectedOutput: unknown;
+        description?: string; 
       }[];
     };
   }[];
@@ -46,29 +48,32 @@ export async function getDBPlanets(): Promise<IDBPlanet[]> {
       .sort('order')
       .lean<LeanPlanet[]>();
     
-    return dbPlanets.map(planet => ({
-      _id: planet._id.toString(),
-      name: planet.name,
-      type: planet.type as PlanetType,
-      description: planet.description,
-      requiredXP: planet.requiredXP,
-      order: planet.order,
-      stations: planet.stations?.map(station => ({
-        _id: station._id.toString(),
-        stationId: station.stationId.toString(),
-        name: station.name,
-        description: station.description,
-        order: station.order,
-        xpReward: station.xpReward,
-        currencyReward: station.currencyReward,
-        challenge: station.challenge
-      })) ?? []
-    }));
-  } catch (error) {
-    console.error('Error fetching dbPlanets:', error);
-    throw new Error('Failed to fetch dbPlanets');
+      return dbPlanets.map(planet => ({
+        _id: planet._id.toString(),
+        name: planet.name,
+        type: planet.type as PlanetType,
+        description: planet.description,
+        requiredXP: planet.requiredXP,
+        order: planet.order,
+        stations: planet.stations?.map(station => ({
+          _id: station._id.toString(),
+          stationId: station.stationId.toString(),
+          name: station.name,
+          description: station.description,
+          order: station.order,
+          xpReward: station.xpReward,
+          currencyReward: station.currencyReward,
+          challenge: {
+            ...station.challenge,
+            type: station.challenge.type || 'function' 
+          }
+        })) ?? []
+      }));
+    } catch (error) {
+      console.error('Error fetching dbPlanets:', error);
+      throw new Error('Failed to fetch dbPlanets');
+    }
   }
-}
 export async function getPlanetsForCanvas(): Promise<IDBPlanet[]> {
   const session = await getServerSession(authOptions);
 

@@ -1,0 +1,50 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 400px 1fr;
+  }
+}
+
+.instructionsPanel {
+  height: 40vh;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: rgba(31, 41, 55, 0.5);
+}
+
+@media (min-width: 1024px) {
+  .instructionsPanel {
+    height: 100vh;
+  }
+}
+
+.editorPanel {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+}
+
+@media (min-width: 1024px) {
+  .editorPanel {
+    height: 100vh;
+  }
+}
+
+.editorContainer {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+.editorWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

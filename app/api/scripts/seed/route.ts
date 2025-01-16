@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import connectDB from '@/lib/db/mongoose';
 import { seedPlanets } from '@/lib/seed/planetSeeder';
+import { deleteUsers } from '@/lib/seed/userSeeder';
+import { deleteUserProgress } from '@/lib/seed/userProgressSeeder';
 import { seedData } from '../data';
 import mongoose from 'mongoose';
+
+async function isAuthorizedRequest() {
+  const headerList = await headers();
+  const seedToken = headerList.get('x-seed-token');
+  
+  return seedToken === process.env.SEED_TOKEN;
+}
 
 interface SeedResult {
   success: boolean;
@@ -21,37 +31,41 @@ async function handleSeedOperation<T extends SeedResult>(
 }
 
 export async function POST() {
+  if (!await isAuthorizedRequest()) {
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Unauthorized' 
+      },
+      { status: 401 }
+    );
+  }
+
   try {
     await connectDB();
     console.log('Starting seeding process...');
 
     console.log('Dropping existing collections...');
-    await Promise.all([mongoose.connection.dropCollection('planets')]).catch(
-      err => {
-        console.log(err, 'Some collections may not exist yet, continuing...');
-      },
-    );
+    await Promise.all([
+      mongoose.connection.dropCollection('userProgress'),
+      mongoose.connection.dropCollection('users'),
+      mongoose.connection.dropCollection('planets'),
+    ]).catch(err => {
+      console.log(err, 'Some collections may not exist yet, continuing...');
+    });
 
-    const results = await Promise.all([
+    await handleSeedOperation(
+      () => deleteUserProgress(),
+      'User progress deletion failed',
+    );
+    await handleSeedOperation(() => deleteUsers(), 'Users deletion failed');
+
+    const [planetResult] = await Promise.all([
       handleSeedOperation(
         () => seedPlanets(seedData.planets),
         'Planet seeding failed',
       ),
-      // handleSeedOperation(
-      //   () => seedStations(seedData.stations),
-      //   'Station seeding failed'
-      // ),
-      // handleSeedOperation(
-      //   () => seedProgress(seedData.progress),
-      //   'Progress seeding failed'
-      // ),
-      // handleSeedOperation(
-      //   () => seedAttempts(seedData.attempts),
-      //   'Attempts seeding failed'
-      // )
     ]);
-
-    const [planetResult] = results;
 
     return NextResponse.json({
       success: true,
@@ -76,25 +90,27 @@ export async function POST() {
 }
 
 export async function GET() {
+  if (!await isAuthorizedRequest()) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Unauthorized',
+      },
+      { status: 401 },
+    );
+  }
+
   try {
     await connectDB();
 
     const [planetCount] = await Promise.all([
-      // mongoose.models.User.countDocuments(),
       mongoose.models.Planet.countDocuments(),
-      // mongoose.models.Station.countDocuments(),
-      // mongoose.models.Progress.countDocuments(),
-      // mongoose.models.Attempt.countDocuments()
     ]);
 
     return NextResponse.json({
       success: true,
       data: {
-        // users: userCount,
         planets: planetCount,
-        // stations: stationCount,
-        // progress: progressCount,
-        // attempts: attemptCount,
       },
     });
   } catch (error) {

@@ -1,16 +1,19 @@
 import { PlanetType } from '@/types/shared/planetTypes';
 import { Types } from 'mongoose';
 
+export type ChallengeType = 'variables' | 'function' | 'algorithm';
 
 interface ITestCase {
   input: unknown;
   expectedOutput: unknown;
+  description?: string;
 }
   
   interface IChallenge {
     instructions: string;
     initialCode: string;
     testCases: ITestCase[];
+    type?: ChallengeType; 
   }
   
   interface IStation {
@@ -50,6 +53,13 @@ interface ITestCase {
     stations: IDBStation[];
   }
   
+  export interface TestResult {
+    passed: boolean;
+    actual: unknown;
+    expected: unknown;
+    input: unknown;
+    executionTime?: number;
+  }
   
   
   export const isPlanet = (value: unknown): value is IPlanet => {

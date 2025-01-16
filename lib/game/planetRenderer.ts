@@ -58,7 +58,6 @@ export class PlanetRenderer {
       ctx.shadowBlur = 30;
       ctx.globalAlpha = 0.5;
   
-      // Draw a slightly larger circle with no fill but shadow
       ctx.beginPath();
       ctx.arc(x, y, radius + 15, 0, Math.PI * 2);
       ctx.strokeStyle = 'transparent';
@@ -96,14 +95,13 @@ export class PlanetRenderer {
         ctx.shadowBlur = 20;
       }
   
-      // Base moon circle with darker color
+      // Base moon circle 
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fillStyle = '#2A2A2A';
       ctx.fill();
   
-      // Draw ominous craters
-      // Draw ominous craters
+      // craters
       const craters = [
         { cx: -0.3, cy: -0.2, size: 0.25 },
         { cx: 0.2, cy: 0.3, size: 0.3 },
@@ -118,16 +116,16 @@ export class PlanetRenderer {
         const craterY = y + crater.cy * radius;
         const craterRadius = crater.size * radius;
   
-        // Add dark rim to craters
+        // darken crater rim
         ctx.beginPath();
         ctx.arc(craterX, craterY, craterRadius * 1.1, 0, Math.PI * 2);
         ctx.fillStyle = '#1A1A1A'; // Darker rim
         ctx.fill();
   
-        // Inner crater
+        // inner crater
         ctx.beginPath();
         ctx.arc(craterX, craterY, craterRadius, 0, Math.PI * 2);
-        ctx.fillStyle = '#0A0A0A'; // Almost black inside
+        ctx.fillStyle = '#0A0A0A'; 
         ctx.fill();
   
         // Add reddish glow to crater depths
@@ -145,7 +143,7 @@ export class PlanetRenderer {
         ctx.fill();
       });
   
-      // Add sinister surface texture
+      // add sinister surface texture
       const gradient = ctx.createRadialGradient(
         x - radius * 0.5,
         y - radius * 0.5,
@@ -154,18 +152,18 @@ export class PlanetRenderer {
         y,
         radius,
       );
-      gradient.addColorStop(0, 'rgba(47, 47, 47, 0.4)'); // Darker highlight
+      gradient.addColorStop(0, 'rgba(47, 47, 47, 0.4)'); 
       gradient.addColorStop(0.5, 'rgba(30, 30, 30, 0.2)');
-      gradient.addColorStop(1, 'rgba(10, 10, 10, 0.3)'); // Almost black shadow
+      gradient.addColorStop(1, 'rgba(10, 10, 10, 0.3)'); 
   
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fillStyle = gradient;
       ctx.fill();
   
-      // Add subtle red undertone
+      // add subtle red undertone
       const evilGlow = ctx.createRadialGradient(x, y, radius * 0.2, x, y, radius);
-      evilGlow.addColorStop(0, 'rgba(139, 0, 0, 0.05)'); // Very subtle dark red
+      evilGlow.addColorStop(0, 'rgba(139, 0, 0, 0.05)'); 
       evilGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
   
       ctx.beginPath();
@@ -201,7 +199,7 @@ export class PlanetRenderer {
       ctx.fillStyle = planetGradient;
       ctx.fill();
   
-      // Add some glow effect to the planet body
+      // add some glow effect to the planet body
       const glowGradient = ctx.createRadialGradient(
         x - radius * 0.3,
         y - radius * 0.3,
@@ -215,7 +213,7 @@ export class PlanetRenderer {
       ctx.fillStyle = glowGradient;
       ctx.fill();
   
-      // rings with alien energy effect
+      // rings
       ctx.beginPath();
       ctx.ellipse(x, y, radius * 1.5, radius * 0.3, Math.PI / 8, 0, Math.PI * 2);
       const ringGradient = ctx.createLinearGradient(
@@ -233,7 +231,7 @@ export class PlanetRenderer {
       ctx.lineWidth = radius * 0.2;
       ctx.stroke();
   
-      // Add pulsing energy rings
+      // make the rings pulsate
       ctx.beginPath();
       ctx.ellipse(x, y, radius * 1.6, radius * 0.35, Math.PI / 8, 0, Math.PI * 2);
       ctx.strokeStyle = 'rgba(255, 0, 200, 0.1)';
@@ -265,7 +263,6 @@ export class PlanetRenderer {
         ctx.shadowBlur = 20;
       }
   
-      // Draw base planet with gradient
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       const planetGradient = ctx.createRadialGradient(
@@ -281,7 +278,6 @@ export class PlanetRenderer {
       ctx.fillStyle = planetGradient;
       ctx.fill();
   
-      // Draw craters
       ctx.shadowBlur = 0;
       // const craterCount = 5;
       // for (let i = 0; i < craterCount; i++) {
@@ -295,7 +291,7 @@ export class PlanetRenderer {
       //   ctx.fill();
       // }
   
-      // Draw the hover effect using the shared function
+      // hover effect
       this.drawHoverEffect({ ctx, x, y, radius, isHovered, accentColor });
       ctx.restore();
     }
@@ -308,7 +304,7 @@ export class PlanetRenderer {
         ctx.shadowBlur = 20;
       }
   
-      // Base planet with gradient
+      // Base planet 
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       const planetGradient = ctx.createRadialGradient(
@@ -325,7 +321,7 @@ export class PlanetRenderer {
       ctx.fillStyle = planetGradient;
       ctx.fill();
   
-      // Glow effect for the planet body
+      // makes planet body glow
       const glowGradient = ctx.createRadialGradient(
         x - radius * 0.4,
         y - radius * 0.4,
@@ -339,7 +335,7 @@ export class PlanetRenderer {
       ctx.fillStyle = glowGradient;
       ctx.fill();
   
-      // Rings of quantum energy
+      // rings
       ctx.beginPath();
       ctx.ellipse(x, y, radius * 1.5, radius * 0.3, Math.PI / 6, 0, Math.PI * 2);
       const ringGradient = ctx.createLinearGradient(
@@ -356,7 +352,7 @@ export class PlanetRenderer {
       ctx.lineWidth = radius * 0.2;
       ctx.stroke();
   
-      // Pulsing energy rings
+      // pulsing rings
       ctx.beginPath();
       ctx.ellipse(x, y, radius * 1.6, radius * 0.35, Math.PI / 6, 0, Math.PI * 2);
       ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
@@ -371,7 +367,7 @@ export class PlanetRenderer {
       this.drawHoverEffect({ ctx, x, y, radius, isHovered, accentColor });
       ctx.restore();
     }
-    // In planetRenderer.ts
+    
     static drawPlanet(type: string, options: DrawOptions): void {
         const planetDrawings: Record<string, (options: DrawOptions) => void> = {
             missionControl: this.drawMoon.bind(this),

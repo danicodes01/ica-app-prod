@@ -45,7 +45,7 @@ export class GameRenderer {
     // Initialize random phases and rates for each star
     this.starPhases = Array.from({ length: count }, () => Math.random() * Math.PI * 2);
     this.twinkleRates = Array.from({ length: count }, () => 
-      (Math.random() * 0.003 + 0.002) // Increased speed range (3x faster)
+      (Math.random() * 0.003 + 0.002) // adjust range of twinkle speed lol
     );
   }
   
@@ -58,21 +58,18 @@ export class GameRenderer {
       
       const combinedTwinkle = (primaryTwinkle * 0.7 + secondaryTwinkle * 0.3);
       
-      const baseAlpha = 0.35;  // Slightly increased base brightness
-      const twinkleAmount = 0.25;  // Increased twinkle intensity
+      const baseAlpha = 0.35;  
+      const twinkleAmount = 0.25;  
       
       star.alpha = baseAlpha + (combinedTwinkle * twinkleAmount);
       
-      // Adjusted alpha bounds for more visible effect
       star.alpha = Math.max(0.2, Math.min(0.7, star.alpha));
     });
   }
   
-  // Enhanced drawStar method
   private drawStar({ ctx, x, y, size, alpha }: StarOptions): void {
     ctx.save();
     
-    // Create a more complex gradient for the star
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
     const starColor = `rgba(235, 235, 245, ${alpha})`;
     const coreColor = `rgba(255, 255, 255, ${alpha * 1.2})`; // Brighter core
@@ -81,7 +78,7 @@ export class GameRenderer {
     gradient.addColorStop(0.5, starColor);
     gradient.addColorStop(1, 'transparent');
     
-    // Add a subtle glow effect
+    // add slight glow
     ctx.shadowColor = 'rgba(255, 255, 255, 0.2)';
     ctx.shadowBlur = size * 0.5;
     
@@ -95,36 +92,93 @@ export class GameRenderer {
 
   private drawPlayer({ ctx, x, y, colors, isMoving }: PlayerOptions): void {
     ctx.save();
-
-    // Glow effect
+    
+    // Center the ship on x,y coordinates
+    ctx.translate(x, y);
+    
+    // scale ship size
+    const scale = 1.3;
+    ctx.scale(scale, scale);
+    
+    // glow
     ctx.shadowColor = colors.accent;
     ctx.shadowBlur = 15;
-
-    // Draw the player ship
-    ctx.font = '30px Arial';
-    ctx.fillStyle = colors.foreground;
-    ctx.fillText('🚀', x - 15, y + 10);
-
-    // Engine trail
+    
+    // Main body (white)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.moveTo(-15, 10);   // Start at bottom left
+    ctx.lineTo(-10, 5);    // Up to middle left
+    ctx.lineTo(-5, 0);     // Up to top left
+    ctx.lineTo(0, -10);    // Up to top center
+    ctx.lineTo(5, 0);      // Down to top right
+    ctx.lineTo(10, 5);     // Down to middle right
+    ctx.lineTo(15, 10);    // Down to bottom right
+    ctx.closePath();
+    ctx.fill();
+    
+    // Red accents
+    ctx.fillStyle = '#FF0000';
+    // Left side accent
+    ctx.fillRect(-12, 3, 3, 4);
+    // Right side accent
+    ctx.fillRect(9, 3, 3, 4);
+    // Center accent
+    ctx.fillRect(-3, 0, 6, 6);
+    
+    // Blue accents
+    ctx.fillStyle = '#0000FF';
+    // Left wing tip
+    ctx.fillRect(-8, 2, 2, 3);
+    // Right wing tip
+    ctx.fillRect(6, 2, 2, 3);
+    
+    // Engine trail when moving
     if (isMoving) {
-      const trailGradient = ctx.createRadialGradient(
-        x,
-        y + 15,
-        0,
-        x,
-        y + 15,
-        25,
-      );
+      const trailGradient = ctx.createRadialGradient(0, 15, 0, 0, 15, 25);
       trailGradient.addColorStop(0, colors.glow);
       trailGradient.addColorStop(1, 'transparent');
       ctx.fillStyle = trailGradient;
       ctx.beginPath();
-      ctx.arc(x, y + 15, 25, 0, Math.PI * 2);
+      ctx.arc(0, 15, 25, 0, Math.PI * 2);
       ctx.fill();
     }
-
+    
     ctx.restore();
-  }
+}
+
+// private drawPlayer({ ctx, x, y, colors, isMoving }: PlayerOptions): void {
+//   ctx.save();
+
+//   // Glow effect
+//   ctx.shadowColor = colors.accent;
+//   ctx.shadowBlur = 15;
+
+//   // Draw the player ship
+//   ctx.font = '30px Arial';
+//   ctx.fillStyle = colors.foreground;
+//   ctx.fillText('🚀', x - 15, y + 10);
+
+//   // Engine trail
+//   if (isMoving) {
+//     const trailGradient = ctx.createRadialGradient(
+//       x,
+//       y + 15,
+//       0,
+//       x,
+//       y + 15,
+//       25,
+//     );
+//     trailGradient.addColorStop(0, colors.glow);
+//     trailGradient.addColorStop(1, 'transparent');
+//     ctx.fillStyle = trailGradient;
+//     ctx.beginPath();
+//     ctx.arc(x, y + 15, 25, 0, Math.PI * 2);
+//     ctx.fill();
+//   }
+
+//   ctx.restore();
+// }
 
   // private updateStars(deltaTime: number): void {
   //   this.stars.forEach(star => {
@@ -134,6 +188,8 @@ export class GameRenderer {
   //     star.alpha = Math.max(0.1, Math.min(0.8, star.alpha));
   //   });
   // }
+
+  
 
   private drawStarfield(
     ctx: CanvasRenderingContext2D,
@@ -245,6 +301,32 @@ export class GameRenderer {
     ctx.restore();
   }
 
+  private drawUserStats(
+    ctx: CanvasRenderingContext2D, 
+    width: number,
+    username: string,
+    xp: number,
+    currency: number,
+    colors: GameColors
+  ): void {
+    ctx.save();
+    
+    ctx.font = '12px "Press Start 2P"';
+    ctx.fillStyle = colors.foreground;
+    ctx.textAlign = 'right';
+    
+    const rightPadding = 20;
+    const topPadding = 60;
+    const lineHeight = 20;
+    
+    // ctx.fillText(`Gyaraga Fighter: ${username}`, width - rightPadding, topPadding);
+    ctx.fillText(`${username}`, width - rightPadding, topPadding);
+    ctx.fillText(`XP: ${xp.toLocaleString()}`, width - rightPadding, topPadding + lineHeight);
+    ctx.fillText(`$$$: ${currency.toLocaleString()}`, width - rightPadding, topPadding + lineHeight * 2);
+    
+    ctx.restore();
+  }
+
   render(options: RenderOptions): void {
     const { ctx, canvas, colors, state } = options;
     const { width, height } = canvas;
@@ -271,6 +353,17 @@ export class GameRenderer {
       colors,
       isMoving,
     });
+
+    if (state.username && state.userStats) {
+      this.drawUserStats(
+        ctx,
+        width,
+        state.username,
+        state.userStats.totalXP,
+        state.userStats.totalCurrency,
+        colors
+      );
+    }
 
     this.lastTime = currentTime;
   }
@@ -306,7 +399,6 @@ export class GameRenderer {
     }
   }
 
-  // Helper method to check if player is near a planet
   isNearPlanet(
     playerX: number,
     playerY: number,

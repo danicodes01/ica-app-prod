@@ -4,20 +4,21 @@ import { useEffect } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { IDBStation } from '@/types/models/planet';
 import { PlanetType } from '@/types/shared/planetTypes';
-import styles from '@/styles/modules/planet.module.css'
+import styles from './planet.module.css';
+import { useRouter } from 'next/navigation';
 
 interface PlanetProps {
   id: string;
 }
 
 export function Planet({ id }: PlanetProps) {
+  const router = useRouter();
   const {
     loadDBPlanets,
     getCurrentPlanet,
     dbPlanets,
     loadStationProgress,
     getStationStatus,
-    updateStationProgress,
     userStats,
   } = useGameStore();
 
@@ -49,62 +50,63 @@ export function Planet({ id }: PlanetProps) {
 
   const isPlanetLocked = userStats.totalXP < planet.requiredXP;
 
+  console.log("PRogress@!: ", userStats.totalXP)
+  
+
   const isStationAvailable = (stationOrder: number) => {
     if (stationOrder === 1) return true;
+    
+    const progress = getStationStatus(
+      planet.type as PlanetType,
+      stationOrder
+    );
+    
     const previousProgress = getStationStatus(
       planet.type as PlanetType,
-      stationOrder - 1,
+      stationOrder - 1
     );
+  
+    // Check if station is locked
+    if (progress?.status === 'LOCKED') return false;
+    
+    // Station is available if previous station is completed
     return previousProgress?.status === 'COMPLETED';
   };
-
+  
   const handleStationClick = async (station: IDBStation) => {
     if (isPlanetLocked) {
-      console.log(
-        `Planet locked. Need ${planet.requiredXP - userStats.totalXP} more XP`,
-      );
+      return; 
+    }
+  
+    const progress = getStationStatus(
+      planet.type as PlanetType,
+      station.order
+    );
+  
+    // user cant click locked stations
+    if (progress?.status === 'LOCKED' || !isStationAvailable(station.order)) {
       return;
     }
-
-    if (!isStationAvailable(station.order)) {
-      console.log('Complete previous station first');
-      return;
-    }
-
-    try {
-      const result = await updateStationProgress(
-        planet.type as PlanetType,
-        station.order,
-        true,
-      );
-
-      if (result.xpAwarded > 0) {
-        console.log(`Congratulations! You earned ${result.xpAwarded} XP!`);
-      } else {
-        console.log('Station completed again! No new XP awarded.');
-      }
-    } catch (error) {
-      console.error('Failed to update station progress:', error);
-    }
+  
+    router.push(`/game/planets/${id}/stations/${station.stationId}`);
   };
 
   const getStationClassName = (station: IDBStation) => {
     const progress = getStationStatus(planet.type as PlanetType, station.order);
     const available = isStationAvailable(station.order);
-
+  
     let className = styles.stationCard;
-    if (progress?.status === 'COMPLETED') {
-        className += ` ${styles.completed}`;
+    
+    if (progress?.status === 'LOCKED' || !available) {
+      className += ` ${styles.locked} cursor-not-allowed`;
+    } else if (progress?.status === 'COMPLETED') {
+      className += ` ${styles.completed}`;
     } else if (progress?.status === 'IN_PROGRESS') {
-        className += ` ${styles.inProgress}`;
+      className += ` ${styles.inProgress}`;
     }
-    if (!available && progress?.status !== 'COMPLETED') {
-        className += ` ${styles.locked}`;
-    } else if (available) {
-        className += ` ${styles.available}`;
-    }
+    
     return className;
-};
+  };
 
   return (
     <div className={styles.container}>
@@ -126,13 +128,13 @@ export function Planet({ id }: PlanetProps) {
             station.order,
           );
           const available = isStationAvailable(station.order);
-
+          
           return (
             <div
-              key={station.stationId}
-              className={getStationClassName(station)}
-              onClick={() => handleStationClick(station)}
-            >
+            key={station.stationId}
+            className={`${getStationClassName(station)} ${isPlanetLocked ? 'cursor-not-allowed opacity-50' : ''}`}
+            onClick={() => !isPlanetLocked && handleStationClick(station)}
+          >
               <h3 className={styles.stationTitle}>{station.name}</h3>
               <p className={styles.stationDescription}>{station.description}</p>
 
@@ -154,13 +156,28 @@ export function Planet({ id }: PlanetProps) {
                   <p>Status: {progress.status}</p>
                   <p>Times Completed: {progress.timesCompleted}</p>
                   {progress.status === 'IN_PROGRESS' && (
-                    <p>Current Attempts: {progress.currentAttempts}</p>
+                    <>
+                      <p>Current Attempts: {progress.currentAttempts}</p>
+                      {progress.currentAttempts >= 2 && station.order !== 1 && (
+                        <p className='text-yellow-400'>
+                          Warning: Next failed attempt will lock this station!
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}
             </div>
           );
         })}
+      </div>
+      <div className='flex justify-between items-center gap-4 mt-4 px-4'>
+        <button
+          onClick={() => router.push(`/game/`)}
+          className='px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm font-mono'
+        >
+          Return to Space
+        </button>
       </div>
     </div>
   );
