@@ -11,4 +11,4 @@ type Props = {
 export default function PlanetPage({ params }: Props) {
     const resolvedParams = React.use(params)
   return <Planet id={resolvedParams.id} />;
-}
+} 

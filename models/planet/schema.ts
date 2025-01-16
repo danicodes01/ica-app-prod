@@ -22,9 +22,15 @@ const PlanetSchema = new Schema<IPlanet>(
       challenge: {
         instructions: { type: String, required: true },
         initialCode: { type: String, required: true },
+        type: { 
+          type: String, 
+          enum: ['variables', 'function', 'algorithm'],
+          default: 'function'
+        },
         testCases: [{
           input: { type: Schema.Types.Mixed, required: true },
-          expectedOutput: { type: Schema.Types.Mixed, required: true }
+          expectedOutput: { type: Schema.Types.Mixed, required: true },
+          description: { type: String }
         }]
       }
     }]

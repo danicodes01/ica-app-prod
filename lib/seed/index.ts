@@ -2,8 +2,9 @@ import { seedData } from '@/app/api/scripts/data';
 import connectDB from '@/lib/db/mongoose';
 import mongoose from 'mongoose';
 import { MongoServerError } from 'mongodb';
-
 import { seedPlanets } from './planetSeeder';
+import { deleteUsers } from './userSeeder';
+import { deleteUserProgress } from './userProgressSeeder';
 
 export async function seedDatabase(options = { dropCollections: true }) {
   try {
@@ -11,7 +12,7 @@ export async function seedDatabase(options = { dropCollections: true }) {
     
     if (options.dropCollections) {
       console.log('Dropping existing collections...');
-      const collections = ['users', 'planets', 'stations', 'progress', 'attempts'];
+      const collections = ['userProgress', 'users', 'planets'];
       await Promise.all(
         collections.map(async (collectionName) => {
           try {
@@ -26,7 +27,15 @@ export async function seedDatabase(options = { dropCollections: true }) {
     }
 
     console.log('Starting database seed...');
+    
+    // First delete user progress and users
+    const userProgressDelete = await deleteUserProgress();
+    if (!userProgressDelete.success) throw new Error('User progress deletion failed: ' + userProgressDelete.error);
+    
+    const usersDelete = await deleteUsers();
+    if (!usersDelete.success) throw new Error('Users deletion failed: ' + usersDelete.error);
 
+    // Then seed planets
     const planets = await seedPlanets(seedData.planets);
     if (!planets.success) throw new Error('Planet seeding failed: ' + planets.error);
 
@@ -35,7 +44,7 @@ export async function seedDatabase(options = { dropCollections: true }) {
     return {
       success: true,
       data: {
-        planets, 
+        planets,
       },
     };
   } catch (error) {
@@ -49,4 +58,6 @@ export async function seedDatabase(options = { dropCollections: true }) {
 
 export {
   seedPlanets,
+  deleteUsers,
+  deleteUserProgress,
 };

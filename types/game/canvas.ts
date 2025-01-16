@@ -24,6 +24,11 @@ export interface GameState {
   currentPlanet: string | null;
   playerPosition: Position;
   isIntroComplete: boolean;
+  username?: string;
+  userStats?: {
+    totalXP: number;
+    totalCurrency: number;
+  };
 }
 
 export interface GameColors {

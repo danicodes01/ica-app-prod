@@ -6,16 +6,24 @@ import { IDBPlanet, IDBStation } from '@/types/models/planet';
 import { getPlanetsForCanvas, getDBPlanets } from '@/actions/planet';
 import { getStationProgress, updateStationAttempt } from '@/actions/userProgress';
 import { GameRenderer } from '@/lib/game/renderer';
-import { ISerializedUserProgress, IUserProgress } from '@/types/models/userProgress';
+import { ISerializedUserProgress } from '@/types/models/userProgress';
 import { PlanetType } from '@/types/shared/planetTypes';
+import { getUserStats } from '@/actions/user';
 
 interface UserStats {
   totalXP: number;
   totalCurrency: number;
 }
 
+interface StationAttemptResult {
+  progress: ISerializedUserProgress;
+  xpAwarded: number;
+  currencyAwarded: number;
+  stationsLocked: boolean;
+  resetToStation?: number;
+}
+
 interface GameStore extends GameState {
-  // Game canvas state
   planets: CanvasPlanet[];
   dbPlanets: IDBPlanet[];
   currentPlanet: string | null;
@@ -24,12 +32,11 @@ interface GameStore extends GameState {
   hoveredPlanet: CanvasPlanet | null;
   canvasOpacity: number;
 
-  // Progress tracking state
   stationProgress: Record<PlanetType, ISerializedUserProgress[]>;
   userStats: UserStats;
   currentStation: IDBStation | null;
+  
 
-  // Methods
   loadDBPlanets: () => Promise<void>;
   loadPlanets: (userXP: number, width: number, height: number) => Promise<void>;
   setCurrentPlanet: (planetId: string | null) => void;
@@ -46,17 +53,12 @@ interface GameStore extends GameState {
     planetType: PlanetType,
     stationOrder: number,
     succeeded: boolean
-  ) => Promise<{
-    progress: IUserProgress;
-    xpAwarded: number;
-    currencyAwarded: number;
-  }>;
+  ) => Promise<StationAttemptResult>;
   getStationStatus: (planetType: PlanetType, stationOrder: number) => ISerializedUserProgress | null;
   updateUserStats: (xp: number, currency: number) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
-  // Game canvas state
   planets: [],
   dbPlanets: [],
   currentPlanet: null,
@@ -65,7 +67,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
   hoveredPlanet: null,
   canvasOpacity: 0,
 
-  // Progress tracking state
   stationProgress: {
     missionControl: [],
     chromanova: [],
@@ -80,10 +81,26 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   loadDBPlanets: async () => {
     try {
-      const data = await getDBPlanets();
-      set({ dbPlanets: data });
+      const [planets, stats] = await Promise.all([
+        getDBPlanets(),
+        getUserStats()
+      ]);
+      
+      set({ 
+        dbPlanets: planets,
+        userStats: {
+          totalXP: stats.totalXP,
+          totalCurrency: stats.totalCurrency
+        }
+      });
+  
+      await get().loadPlanets(
+        stats.totalXP,
+        window.innerWidth,
+        window.innerHeight
+      );
     } catch (error) {
-      console.error('Failed to load DB planets:', error);
+      console.error('Failed to load game data:', error);
     }
   },
 
@@ -137,7 +154,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   handlePlanetInteraction: (planet: CanvasPlanet) => {
     if (!planet.isUnlocked) {
-      console.log('Planet locked - Required XP:', planet.requiredXP);
       return;
     }
   },
@@ -173,27 +189,36 @@ export const useGameStore = create<GameStore>((set, get) => ({
       );
 
       await get().loadStationProgress(planetType);
-
       if (result.xpAwarded || result.currencyAwarded) {
         get().updateUserStats(result.xpAwarded, result.currencyAwarded);
+      }
 
-        const { planets } = get();
-        if (planets.length > 0) {
-          await get().loadPlanets(
-            get().userStats.totalXP,
-            window.innerWidth,
-            window.innerHeight
+      if (result.stationsLocked && result.resetToStation !== undefined) {
+        const planet = get().getCurrentPlanet(get().currentPlanet || '');
+        if (planet) {
+          const resetStation = planet.stations.find(
+            s => s.order === result.resetToStation
           );
+          if (resetStation) {
+            get().setCurrentStation(resetStation);
+          }
         }
       }
 
+      const { planets } = get();
+      if (planets.length > 0) {
+        await get().loadPlanets(
+          get().userStats.totalXP,
+          window.innerWidth,
+          window.innerHeight
+        );
+      }
       return result;
     } catch (error) {
       console.error('Failed to update station progress:', error);
       throw error;
     }
   },
-
   getStationStatus: (planetType: PlanetType, stationOrder: number) => {
     const planetProgress = get().stationProgress[planetType];
     return planetProgress.find(p => p.stationOrder === stationOrder) || null;

@@ -41,7 +41,7 @@ const DURATION_BREAKPOINTS: ScreenBreakpoint[] = [
   { maxWidth: 600, duration: 45000 },
   { maxWidth: 800, duration: 40000 },
   { maxWidth: 1000, duration: 37000 },
-  { maxWidth: 1200, duration: 40000 },
+  { maxWidth: 1200, duration: 41000 },
   { maxWidth: 1440, duration: 39000 },
 ];
 
@@ -50,7 +50,7 @@ function calculateFadeDuration(width: number, height: number): number {
   const breakpoint = DURATION_BREAKPOINTS.find(bp => width <= bp.maxWidth);
   const baseDuration = breakpoint?.duration || 39000;
 
-  // Adjust for height - taller screens need more time
+  // Adjust for taller screens
   const heightFactor = Math.min(Math.max(height / 600, 0.95), 1.05);
 
   return Math.round(baseDuration * heightFactor);
@@ -87,7 +87,6 @@ export default function IntroCrawl({ onComplete }: IntroCrawlProps) {
       window.innerHeight,
     );
 
-    // Set end position CSS variable
     const endPosition = -contentHeight - containerHeight;
     document.documentElement.style.setProperty(
       '--end-position',

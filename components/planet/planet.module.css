@@ -1,5 +1,7 @@
 .container {
     padding: 1.5rem;
+    text-align: center;
+    align-items: center;
   }
   
   .header {
@@ -24,6 +26,7 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: 1fr;
+    
   }
   
   @media (min-width: 768px) {
@@ -46,13 +49,17 @@
   }
   
   .stationCard.completed {
-    border-color: #22c55e;
-    background-color: #f0fdf4;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
   }
   
   .stationCard.inProgress {
-    border-color: #eab308;
-    background-color: #fefce8;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
   }
   
   .stationCard.locked {

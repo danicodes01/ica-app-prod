@@ -16,7 +16,6 @@ export interface IUserProgress {
   readonly updatedAt?: Date;
 }
 
-// Add to types/models/userProgress.ts
 export interface ISerializedUserProgress {
   _id: string;
   userId: string;
