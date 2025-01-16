@@ -5,6 +5,7 @@ export interface TypeValidation {
     length?: number;
     elementType?: string;
     properties?: Record<string, TypeValidation>;
+    value?: unknown; 
   }
 
   export interface ITestCase {
