@@ -72,7 +72,6 @@ export const runCodeTest = (
         }
       `;
 
-      // Create a safe console that matches the editor implementation
       const logMessages: string[] = [];
       const safeConsole = {
         log: (...args: unknown[]) => {
