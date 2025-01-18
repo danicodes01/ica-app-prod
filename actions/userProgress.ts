@@ -73,21 +73,31 @@ export async function getStationProgress(planetType: PlanetType) {
     stationOrder: number,
     succeeded: boolean
   ): Promise<StationAttemptResult> {
+    console.log('[Server] updateStationAttempt called:', {
+      planetType,
+      stationOrder,
+      succeeded
+    });
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      throw new Error("Unauthorized");
-    }
+  if (!session?.user?.email) {
+    console.log('[Server] No session found');
+    throw new Error("Unauthorized");
+  }
   
     try {
       await connectDB();
       
       const user = await User.findOne({ email: session.user.email });
       if (!user) {
+        console.log('[Server] User not found:', session.user.email);
         throw new Error("User not found");
       }
+
+      console.log('[Server] Found user:', user._id);
   
       const planet = await Planet.findOne({ type: planetType }).lean<IDBPlanet>();
       if (!planet) {
+        console.log('[Server] Planet not found:', planetType);
         throw new Error("Planet not found");
       }
   
@@ -102,6 +112,8 @@ export async function getStationProgress(planetType: PlanetType) {
         planetType,
         stationOrder
       });
+
+      console.log('[Server] Current progress:', progress);
   
       const initialStatus = progress?.status;
       const wasAlreadyCompleted = initialStatus === 'COMPLETED';
@@ -119,9 +131,9 @@ export async function getStationProgress(planetType: PlanetType) {
         });
       }
   
-      // Handle failure case
+      // sad path
       if (!succeeded) {
-        // First station gets unlimited attempts
+        console.log('[Server] Handling failure case');
         if (stationOrder === 1) {
           progress = await UserProgress.findOneAndUpdate(
             { userId: user._id, planetType, stationOrder },
@@ -141,8 +153,8 @@ export async function getStationProgress(planetType: PlanetType) {
           };
         }
   
-        // For other stations, check if we've hit max attempts
         if (progress.currentAttempts >= 2) {
+          console.log('[Server] Max attempts reached, locking station');
           // Lock current station and reset attempts
           progress = await UserProgress.findOneAndUpdate(
             { userId: user._id, planetType, stationOrder },
@@ -163,6 +175,9 @@ export async function getStationProgress(planetType: PlanetType) {
               lastAttemptAt: new Date()
             }
           );
+
+          console.log('[Server] Station locked, reset to previous station');
+
   
           return {
             progress: serializeProgress(progress),
@@ -185,6 +200,14 @@ export async function getStationProgress(planetType: PlanetType) {
         }
       } else {
         // Handle success case
+        const previousProgress = await UserProgress.findOne({
+          userId: user._id,
+          planetType,
+          stationOrder
+        });
+
+        const hasCompletedBefore = previousProgress?.timesCompleted > 0;
+
         progress = await UserProgress.findOneAndUpdate(
           { userId: user._id, planetType, stationOrder },
           {
@@ -196,15 +219,15 @@ export async function getStationProgress(planetType: PlanetType) {
           },
           { new: true }
         );
-  
-        // Only give xp if this is the first time completing the challenge
-        if (!wasAlreadyCompleted) {
+
+        if (!hasCompletedBefore) {
           await User.findByIdAndUpdate(user._id, {
             $inc: { 
               totalXP: station.xpReward,
               totalCurrency: station.currencyReward
             }
           });
+        }
   
           // Unlock next station
           const nextStation = planet.stations.find((s: IDBStation) => s.order === stationOrder + 1);
@@ -223,21 +246,27 @@ export async function getStationProgress(planetType: PlanetType) {
               { upsert: true }
             );
           }
+
+  
+          return {
+            progress: serializeProgress(progress),
+            xpAwarded: !hasCompletedBefore ? station.xpReward : 0,
+            currencyAwarded: !hasCompletedBefore ? station.currencyReward : 0,
+            stationsLocked: false
+          };
         }
+        return {
+          progress: serializeProgress(progress),
+          xpAwarded: 0,
+          currencyAwarded: 0,
+          stationsLocked: false
+        };
+    
+      } catch (error) {
+        console.error('Error updating station attempt:', error);
+        throw error;
       }
-  
-      return {
-        progress: serializeProgress(progress),
-        xpAwarded: succeeded && !wasAlreadyCompleted ? station.xpReward : 0,
-        currencyAwarded: succeeded && !wasAlreadyCompleted ? station.currencyReward : 0,
-        stationsLocked: false
-      };
-  
-    } catch (error) {
-      console.error('Error updating station attempt:', error);
-      throw error;
     }
-  }
 
 export async function unlockNextStation(
   planetType: PlanetType,

@@ -14,12 +14,12 @@ interface PlanetProps {
 export function Planet({ id }: PlanetProps) {
   const router = useRouter();
   const {
+    dbPlanets,
+    userStats,
     loadDBPlanets,
     getCurrentPlanet,
-    dbPlanets,
     loadStationProgress,
     getStationStatus,
-    userStats,
   } = useGameStore();
 
   useEffect(() => {

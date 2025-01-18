@@ -17,6 +17,9 @@ notes.txt
 /.next/
 /out/
 
+notfoundlolol.tsx
+station-a.tsx
+
 # production
 /build
 

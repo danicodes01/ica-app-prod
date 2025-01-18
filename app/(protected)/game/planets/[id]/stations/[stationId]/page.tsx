@@ -3,18 +3,17 @@
 import * as React from 'react'
 import { Station } from '@/components/station/station';
 import { useGameStore } from '@/store/useGameStore';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { PlanetType } from '@/types/shared/planetTypes';
 
-interface Props {
-  params: Promise<{
-    id: string;
-    stationId: string;
-  }>;
+interface ParamProps {
+  [key: string]: string | string[] | undefined;
+  id: string;
+  stationId: string;
 }
 
-export default function StationPage({ params }: Props) {
-  const { id: planetId, stationId } = React.use(params);
+export default function StationPage() {
+  const { id: planetId, stationId } = useParams<ParamProps>();
   const { getCurrentPlanet, userStats, getStationStatus } = useGameStore();
 
   const planet = getCurrentPlanet(planetId);
