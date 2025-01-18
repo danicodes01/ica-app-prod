@@ -1,14 +1,13 @@
 'use client'
 import * as React from 'react'
 import { Planet } from '@/components/planet/planet'; 
+import { useParams } from 'next/navigation';
 
-type Props = {
-    params: Promise<{
-        id: string
-    }>
+type ParamProps = {
+    id: string
 }
 
-export default function PlanetPage({ params }: Props) {
-    const resolvedParams = React.use(params)
-  return <Planet id={resolvedParams.id} />;
+export default function PlanetPage() {
+    const params = useParams<ParamProps>()
+  return <Planet id={params.id} />;
 } 

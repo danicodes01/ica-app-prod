@@ -31,6 +31,7 @@ interface GameStore extends GameState {
   isIntroComplete: boolean;
   hoveredPlanet: CanvasPlanet | null;
   canvasOpacity: number;
+  isNavigating: boolean;
 
   stationProgress: Record<PlanetType, ISerializedUserProgress[]>;
   userStats: UserStats;
@@ -52,7 +53,8 @@ interface GameStore extends GameState {
   updateStationProgress: (
     planetType: PlanetType,
     stationOrder: number,
-    succeeded: boolean
+    succeeded: boolean,
+    planetId: string
   ) => Promise<StationAttemptResult>;
   getStationStatus: (planetType: PlanetType, stationOrder: number) => ISerializedUserProgress | null;
   updateUserStats: (xp: number, currency: number) => void;
@@ -78,6 +80,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     totalCurrency: 0
   },
   currentStation: null,
+  isNavigating: false,
 
   loadDBPlanets: async () => {
     try {
@@ -105,7 +108,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   getCurrentPlanet: (id: string) => {
+    console.log('[Store] Getting current planet:', id);
     const planet = get().dbPlanets.find(planet => planet._id === id);
+    console.log('[Store] Found planet:', planet?.type);
     return planet || null;
   },
 
@@ -159,40 +164,59 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   loadStationProgress: async (planetType: PlanetType) => {
+    console.log(`[Store] Loading station progress for ${planetType}`);
     try {
       const progress = await getStationProgress(planetType);
-      set(state => ({
-        stationProgress: {
-          ...state.stationProgress,
-          [planetType]: progress
-        }
-      }));
+      console.log(`[Store] Received progress for ${planetType}:`, progress);
+      set(state => {
+        console.log('[Store] Updating station progress state');
+        return {
+          stationProgress: {
+            ...state.stationProgress,
+            [planetType]: progress
+          }
+        };
+      });
     } catch (error) {
-      console.error('Failed to load station progress:', error);
+      console.error('[Store] Failed to load station progress:', error);
     }
   },
 
   setCurrentStation: (station: IDBStation | null) => {
+    console.log('[Store] Setting current station:', station);
     set({ currentStation: station });
   },
 
   updateStationProgress: async (
     planetType: PlanetType,
     stationOrder: number,
-    succeeded: boolean
+    succeeded: boolean,
+    planetId: string
   ) => {
+    console.log(`[Store] Starting updateStationProgress:`, {
+      planetType,
+      stationOrder,
+      succeeded
+    });
     try {
       const result = await updateStationAttempt(
         planetType,
         stationOrder,
         succeeded
       );
-
-      await get().loadStationProgress(planetType);
-      if (result.xpAwarded || result.currencyAwarded) {
-        get().updateUserStats(result.xpAwarded, result.currencyAwarded);
-      }
-
+      const progress = await getStationProgress(planetType);
+      
+      const updates: Partial<GameStore> = {
+        stationProgress: {
+          ...get().stationProgress,
+          [planetType]: progress
+        },
+        userStats: {
+          totalXP: get().userStats.totalXP + (result.xpAwarded || 0),
+          totalCurrency: get().userStats.totalCurrency + (result.currencyAwarded || 0)
+        },
+      };
+  
       if (result.stationsLocked && result.resetToStation !== undefined) {
         const planet = get().getCurrentPlanet(get().currentPlanet || '');
         if (planet) {
@@ -200,11 +224,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
             s => s.order === result.resetToStation
           );
           if (resetStation) {
-            get().setCurrentStation(resetStation);
+            updates.currentStation = resetStation;
           }
         }
       }
-
+  
+      set(updates);
+  
       const { planets } = get();
       if (planets.length > 0) {
         await get().loadPlanets(
@@ -213,18 +239,31 @@ export const useGameStore = create<GameStore>((set, get) => ({
           window.innerHeight
         );
       }
+  
+      console.log('[Store] State updates completed');
+
+      // Handle navigation after all updates are complete
+      if (result.stationsLocked) {
+        set({isNavigating: true});
+        window.location.href = `/game/planets/${planetId}`;
+      }
+
       return result;
     } catch (error) {
-      console.error('Failed to update station progress:', error);
+      console.error('[Store] Failed to update station progress:', error);
       throw error;
     }
   },
   getStationStatus: (planetType: PlanetType, stationOrder: number) => {
+    console.log('[Store] Getting station status:', { planetType, stationOrder });
     const planetProgress = get().stationProgress[planetType];
-    return planetProgress.find(p => p.stationOrder === stationOrder) || null;
+    const status = planetProgress.find(p => p.stationOrder === stationOrder);
+    console.log('[Store] Station status:', status);
+    return status || null;
   },
 
   updateUserStats: (xp: number, currency: number) => {
+    console.log('[Store] Updating user stats:', { xp, currency });
     set(state => ({
       userStats: {
         totalXP: state.userStats.totalXP + xp,
