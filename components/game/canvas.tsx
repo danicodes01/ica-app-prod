@@ -126,7 +126,6 @@ export default function GameCanvas() {
     if (session?.user?.email) {
       sessionStorage.setItem(`hasSeenIntro-${session.user.email}`, 'true');
 
-      // Add 500ms delay before starting the fade
       setTimeout(() => {
         let opacity = 0;
         const fadeInterval = setInterval(() => {
