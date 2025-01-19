@@ -199,7 +199,7 @@ export async function getStationProgress(planetType: PlanetType) {
           );
         }
       } else {
-        // Handle success case
+        // Happy Path
         const previousProgress = await UserProgress.findOne({
           userId: user._id,
           planetType,
