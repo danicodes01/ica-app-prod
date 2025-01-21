@@ -1,3 +1,5 @@
+import Loading from "../ui/loading";
+
 interface StationNavProps {
     output: string | null
 }
@@ -11,7 +13,7 @@ export default async function StationNavigation({output}: StationNavProps) {
         return (
           <div>
             <p>station failed</p>
-            <div>Loading ...</div>
+            <Loading loadingData=" Planet 🌙"/>
             <p>returning to planet</p>
           </div>
         );

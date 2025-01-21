@@ -11,6 +11,7 @@ import styles from './station.module.css';
 import { useSession } from 'next-auth/react';
 import StationEditor from './station-editor';
 import { StationInstructions } from './station-intructions';
+import Loading from '../ui/loading';
 
 interface StationProps {
   planetId: string;
@@ -60,10 +61,13 @@ export function Station({ planetId, station, planetType }: StationProps) {
 
   const navigateWithDelay = useCallback((delay: number = 1500) => {
     if (!mountedRef.current) return;
+
+    console.log("navigation")
     
     setTimeout(() => {
       if (mountedRef.current) {
         window.location.replace(`/game/planets/${planetId}`);
+        console.log("nagigated")
       }
     }, delay);
 }, [planetId]);
@@ -140,7 +144,7 @@ export function Station({ planetId, station, planetType }: StationProps) {
   }, [planetId]);
 
   if (isNavigating) {
-    return <div>Loading...</div>;  // Or your loading component
+    return <Loading loadingData=' Planet 🌕'  />;  
   }
 
    if (isSubmitting) {

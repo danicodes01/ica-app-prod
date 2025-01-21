@@ -11,10 +11,11 @@ import { CODE_SNIPPETS } from '@/utils/constants/codeEditor/editor';
 import { LanguageSelector } from './language-selector';
 import { cleanupOldCode } from '@/utils/localStorage';
 import { executeCode } from '@/utils/editor/codeExecuter';
+import Loading from '../ui/loading';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
   ssr: false,
-  loading: () => <div>Loading editor...</div>,
+  loading: () => <Loading loadingData='EditorEditor 👾👾👾'/>,
 });
 
 const claudeTheme: editor.IStandaloneThemeData = {

@@ -18,7 +18,7 @@ export default function Home() {
   }, [status, router]);
 
   if (status === 'loading') {
-    return <Loading />;
+    return <Loading loadingData=', Checking Authentication'/>;
   }
 
   return null;

@@ -23,6 +23,8 @@ oldmongo.ts
 # production
 /build
 
+old-game-store.ts
+
 # misc
 .DS_Store
 *.pem

@@ -1,33 +1,23 @@
 'use client';
-import { useEffect, useState } from 'react';
+
 import { useGameStore } from '@/store/useGameStore';
-import { getUserStats } from '@/actions/user';
-import Loading from '@/components/ui/loading';
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { UserStats } from '@/types/store/slices'; 
 
-export default function GameLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { updateUserStats } = useGameStore();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const initializeGameState = async () => {
-        const stats = await getUserStats();
-      try {
-        updateUserStats(stats.totalXP, stats.totalCurrency);
-      } catch (error) {
-        console.error('Failed to initialize game state:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeGameState();
-  }, [updateUserStats]);
-
-  if (isLoading) return <Loading />;
+export default function GameLayout({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
+  const initGame = useGameStore(state => state.initializeGameState);
   
+  useEffect(() => {
+    if (session?.user) {
+      const stats: UserStats = {
+        totalXP: session.user.totalXP,
+        totalCurrency: session.user.totalCurrency
+      };
+      initGame(stats);
+    }
+  }, [session, initGame]);
+
   return <>{children}</>;
 }
