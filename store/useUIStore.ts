@@ -33,3 +33,18 @@
 //   clearKeys: () =>
 //     set({ activeKeys: new Set() }),
 // }));
+
+
+
+
+
+
+
+////////////
+
+
+// await get().loadPlanets(
+//     stats.totalXP,
+//     window.innerWidth,
+//     window.innerHeight
+//   );

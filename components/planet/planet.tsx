@@ -6,6 +6,7 @@ import { IDBStation } from '@/types/models/planet';
 import { PlanetType } from '@/types/shared/planetTypes';
 import styles from './planet.module.css';
 import { useRouter } from 'next/navigation';
+import Loading from '../ui/loading';
 
 interface PlanetProps {
   id: string;
@@ -45,7 +46,7 @@ export function Planet({ id }: PlanetProps) {
   const planet = getCurrentPlanet(id);
 
   if (!planet) {
-    return <div>Loading...</div>;
+    return <Loading loadingData=' Current Planet 💾'/>;
   }
 
   const isPlanetLocked = userStats.totalXP < planet.requiredXP;
@@ -55,48 +56,48 @@ export function Planet({ id }: PlanetProps) {
 
   const isStationAvailable = (stationOrder: number) => {
     if (stationOrder === 1) return true;
-    
+
     const progress = getStationStatus(
       planet.type as PlanetType,
       stationOrder
     );
-    
+
     const previousProgress = getStationStatus(
       planet.type as PlanetType,
       stationOrder - 1
     );
-  
+
     // Check if station is locked
     if (progress?.status === 'LOCKED') return false;
-    
+
     // Station is available if previous station is completed
     return previousProgress?.status === 'COMPLETED';
   };
-  
+
   const handleStationClick = async (station: IDBStation) => {
     if (isPlanetLocked) {
-      return; 
+      return;
     }
-  
+
     const progress = getStationStatus(
       planet.type as PlanetType,
       station.order
     );
-  
+
     // user cant click locked stations
     if (progress?.status === 'LOCKED' || !isStationAvailable(station.order)) {
       return;
     }
-  
+
     router.push(`/game/planets/${id}/stations/${station.stationId}`);
   };
 
   const getStationClassName = (station: IDBStation) => {
     const progress = getStationStatus(planet.type as PlanetType, station.order);
     const available = isStationAvailable(station.order);
-  
+
     let className = styles.stationCard;
-    
+
     if (progress?.status === 'LOCKED' || !available) {
       className += ` ${styles.locked} cursor-not-allowed`;
     } else if (progress?.status === 'COMPLETED') {
@@ -104,7 +105,7 @@ export function Planet({ id }: PlanetProps) {
     } else if (progress?.status === 'IN_PROGRESS') {
       className += ` ${styles.inProgress}`;
     }
-    
+
     return className;
   };
 
@@ -128,13 +129,15 @@ export function Planet({ id }: PlanetProps) {
             station.order,
           );
           const available = isStationAvailable(station.order);
-          
+
           return (
             <div
-            key={station.stationId}
-            className={`${getStationClassName(station)} ${isPlanetLocked ? 'cursor-not-allowed opacity-50' : ''}`}
-            onClick={() => !isPlanetLocked && handleStationClick(station)}
-          >
+              key={station.stationId}
+              className={`${getStationClassName(station)} ${
+                isPlanetLocked ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+              onClick={() => !isPlanetLocked && handleStationClick(station)}
+            >
               <h3 className={styles.stationTitle}>{station.name}</h3>
               <p className={styles.stationDescription}>{station.description}</p>
 

@@ -25,7 +25,7 @@ export interface GameState {
   playerPosition: Position;
   isIntroComplete: boolean;
   username?: string;
-  userStats?: {
+  userStats: {
     totalXP: number;
     totalCurrency: number;
   };

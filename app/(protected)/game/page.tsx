@@ -9,7 +9,7 @@ import { signOut } from 'next-auth/react';
 export default function GamePage() {
     const router = useRouter()
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading loadingData=' Galaxy'/>}>
       <GameCanvas />
       <button
         className="fixed bottom-3 right-6 text-xs border border-solid border-black rounded text-blue-400 z-50"

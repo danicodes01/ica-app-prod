@@ -6,6 +6,7 @@ import { redirect, useRouter } from 'next/navigation';
 import { GameRenderer } from '@/lib/game/renderer';
 import { useGameStore } from '@/store/useGameStore';
 import IntroCrawl from './intro-crawl';
+import Loading from '../ui/loading';
 
 const SHIP_SPEED = 5;
 const INTERACTION_RADIUS = 30;
@@ -302,7 +303,7 @@ export default function GameCanvas() {
     };
   }, [handleCanvasClick, handleMouseMove, showIntro]);
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <Loading loadingData=' Planet 🪐'/>;
   }
   return (
     <div className='fixed inset-0 bg-black'>

@@ -1,3 +1,4 @@
+// app/(protected)/layout.tsx
 'use client';
 
 import Loading from '@/components/ui/loading';
@@ -9,14 +10,15 @@ export default function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { status } = useSession();
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/login');
+    },
+  });
 
   if (status === 'loading') {
-    return <Loading />;
-  }
-
-  if (status === 'unauthenticated') {
-    redirect('/login');
+    return <Loading loadingData=', Checking Authentication 🤖'/>;
   }
 
   return <>{children}</>;
