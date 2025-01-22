@@ -1,4 +1,550 @@
+.pageWrapper {
+  @apply min-h-screen w-full relative overflow-hidden;
+  background: #1a1a2e;
+}
+
+.container {
+  @apply relative w-full h-screen flex flex-col;
+}
+
 .layout {
+  @apply grid h-full;
+  grid-template-columns: 400px 1fr;
+}
+
+/* Clerk Section */
+.clerkSection {
+  @apply h-full overflow-y-auto text-sm border-r border-gray-800;
+  background: linear-gradient(180deg, rgba(13, 17, 23, 0.95) 0%, rgba(13, 17, 23, 0.85) 100%);
+  position: relative;
+}
+
+.clerkSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, white 100%, transparent),
+    radial-gradient(1px 1px at 40px 70px, white 100%, transparent),
+    radial-gradient(1.5px 1.5px at 90px 40px, white 100%, transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, white 100%, transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.15;
+  animation: twinkling 8s infinite linear;
+}
+
+@keyframes twinkling {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200px); }
+}
+
+.clerkDialogue {
+  @apply relative z-10 p-6 text-gray-200;
+}
+
+.pixelClerkContainer {
+  @apply relative w-32 h-32 mx-auto mb-6;
+}
+
+.clerkContent {
+  @apply p-4;
+}
+
+.pixelClerk {
+  @apply w-full h-full;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.1));
+}
+
+.dialogueTitle {
+  @apply text-center text-xl font-bold mb-4 text-green-400;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+.dialogueText {
+  @apply text-gray-300 mb-8 leading-relaxed;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+}
+
+.nameTag {
+  @apply absolute -bottom-2 left-1/2 transform -translate-x-1/2
+         bg-red-600 text-white px-2 py-0.5 text-xs
+         font-bold uppercase tracking-wide;
+  font-family: 'Press Start 2P', monospace;
+}
+/* Editor Section */
+.editorSection {
+  @apply h-full flex flex-col bg-[#1E1E1E] relative;
+}
+
+.taskSection {
+  @apply mb-8 p-4 rounded-lg;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.taskTitle {
+  @apply text-green-400 font-bold mb-2;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.taskDescription {
+  @apply text-gray-300 leading-relaxed;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+}
+
+
+.editorContainer {
+  @apply flex-1 relative min-h-0;
+}
+
+.editorWrapper {
+  @apply absolute inset-0;
+}
+
+/* Results Panel */
+.resultsPanel {
+  @apply p-4 bg-[#1E1E1E] border-t border-gray-700;
+}
+
+.output {
+  @apply font-mono text-sm;
+}
+
+.outputDefault {
+  @apply text-gray-300;
+}
+
+.outputSuccess {
+  @apply text-green-400;
+}
+
+.outputError {
+  @apply text-red-400;
+}
+
+.logs {
+  @apply mt-4 space-y-2;
+}
+
+.logLine {
+  @apply font-mono text-sm text-gray-300;
+}
+
+/* Navigation */
+.navigationBar {
+  @apply p-4 border-t border-gray-700 bg-[#1E1E1E];
+}
+
+.navigationButton {
+  @apply px-4 py-2 bg-red-700 hover:bg-red-600 
+         rounded text-sm font-mono text-white
+         transition-colors duration-200;
+}
+
+.testTitle {
+  @apply text-green-400 font-bold mb-4;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.testCase {
+  @apply space-y-2 text-sm;
+}
+
+.testInput, .testExpected {
+  @apply font-mono text-gray-300;
+}
+
+.codeText {
+  @apply bg-black bg-opacity-50 px-2 py-1 rounded text-green-400 text-xs;
+  font-family: monospace;
+}
+
+/* Scanline effect */
+.clerkSection::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1) 0px,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+/* Mobile Adaptations */
+@media (max-width: 1024px) {
+  .layout {
+    @apply grid-cols-1;
+    grid-template-rows: auto 1fr;
+  }
+
+  .clerkSection {
+    @apply h-[40vh] border-b border-r-0;
+  }
+
+  .editorSection {
+    @apply h-[60vh];
+  }
+}
+
+
+
+/* 
+
+
+.pageWrapper {
+  @apply min-h-screen w-full relative overflow-hidden;
+}
+
+.container {
+  @apply relative w-full min-h-screen flex flex-col;
+}
+
+.layout {
+  @apply flex flex-col lg:flex-row flex-1;
+}
+
+.instructionsPanel {
+  @apply h-full overflow-y-auto text-sm bg-[#0d0d1a] border-r border-gray-800;
+}
+
+.clerkScene {
+  @apply p-4 h-48 flex justify-center items-end relative;
+  background: repeating-linear-gradient(
+    0deg,
+    #1a1a2e,
+    #1a1a2e 2px,
+    #15152b 2px,
+    #15152b 4px
+  );
+}
+
+.pixelClerkWrapper {
+  @apply relative w-32 h-32;
+  image-rendering: pixelated;
+}
+
+.nameTag {
+  @apply absolute -bottom-2 left-1/2 transform -translate-x-1/2
+         bg-red-600 text-white px-2 py-0.5 text-xs
+         font-bold uppercase tracking-wide;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.dialogContent {
+  @apply p-4;
+}
+
+.stationTitle {
+  @apply text-xl font-bold mb-4 text-green-400 text-center;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.stationDescription {
+  @apply text-gray-300 text-sm mb-6;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.taskBox {
+  @apply bg-gray-100 p-4 text-sm rounded shadow-md text-black mb-6;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 27px,
+    #DDD 28px
+  );
+}
+
+.testCaseContainer {
+  @apply border-2 border-gray-600 rounded-lg p-4 bg-black;
+}
+
+.testCaseHeader {
+  @apply text-center text-green-400 border-b-2 border-green-400 pb-2 mb-4;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.testCase {
+  @apply p-3 border border-green-400/30 rounded mb-4 text-green-400;
+  font-family: monospace;
+}
+
+.editorPanel {
+  @apply h-full flex flex-col bg-[#1E1E1E];
+}
+
+.editorContainer {
+  @apply flex-1 relative min-h-0;
+}
+
+.editorWrapper {
+  @apply absolute inset-0;
+}
+
+.resultsPanel {
+  @apply p-4 bg-[#1E1E1E] border-t border-gray-700;
+}
+
+.output {
+  @apply font-mono text-sm;
+}
+
+.outputDefault {
+  @apply text-gray-300;
+}
+
+.outputSuccess {
+  @apply text-green-400;
+}
+
+.outputError {
+  @apply text-red-400;
+}
+
+.logs {
+  @apply mt-4 space-y-2;
+}
+
+.logLine {
+  @apply font-mono text-sm text-gray-300;
+}
+
+.navigationBar {
+  @apply p-4 border-t border-gray-700 bg-[#1E1E1E];
+}
+
+.navigationButton {
+  @apply px-4 py-2 bg-red-700 hover:bg-red-600 
+         rounded text-sm font-mono text-white
+         transition-colors duration-200;
+}
+
+
+
+
+@media (max-width: 1024px) {
+  .layout {
+    @apply grid-cols-1;
+  }
+
+  .instructionsPanel {
+    @apply h-[40vh] border-b border-r-0;
+  }
+
+  .editorPanel {
+    @apply h-[60vh];
+  }
+}
+
+.instructionsPanel::after {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-full pointer-events-none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.97; }
+  15% { opacity: 0.94; }
+  20% { opacity: 0.98; }
+  50% { opacity: 0.95; }
+  80% { opacity: 0.98; }
+  100% { opacity: 0.95; }
+}
+
+.testCaseContainer {
+  animation: flicker 4s infinite;
+}
+
+ */
+
+
+
+/* 
+
+.pageWrapper {
+  @apply min-h-screen w-full relative overflow-hidden;
+  background: linear-gradient(to bottom, #0a0a0f 0%, #1a1a2e 100%);
+}
+
+.container {
+  @apply relative w-full h-screen z-10;
+}
+
+.layout {
+  @apply grid grid-cols-1 lg:grid-cols-[450px_1fr] h-full;
+}
+
+.clerkContainer {
+  @apply h-full p-6 relative overflow-y-auto;
+  background: rgba(13, 14, 33, 0.9);
+  border-right: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.hologramEffect {
+  @apply flex justify-center items-center mb-6 relative;
+}
+
+.clerkAvatar {
+  @apply w-24 h-24 flex items-center justify-center rounded-full;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.2), transparent);
+  animation: hologramPulse 4s infinite;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+.dialogBox {
+  @apply rounded-lg p-4;
+  background: rgba(17, 19, 45, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.dialogHeader {
+  @apply flex items-center justify-between mb-4 pb-2;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.clerkName {
+  @apply text-lg font-bold bg-clip-text text-transparent;
+  background-image: linear-gradient(45deg, #63f2f1, #6366f1);
+}
+
+.statusBadge {
+  @apply px-2 py-1 text-xs rounded-full;
+  background: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.messageContainer {
+  @apply space-y-4;
+}
+
+.welcomeMessage {
+  @apply text-cyan-300 text-sm leading-relaxed;
+}
+
+.challengeBox {
+  @apply rounded-lg p-4 space-y-2 my-4;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.challengeIntro {
+  @apply text-indigo-300 font-medium;
+}
+
+.challengeText {
+  @apply text-gray-300 text-sm leading-relaxed;
+}
+
+.testCaseSection {
+  @apply mt-6 space-y-3;
+}
+
+.testCaseHeader {
+  @apply text-sm font-medium text-indigo-300 mb-2;
+}
+
+.testCaseList {
+  @apply space-y-3;
+}
+
+.testCase {
+  @apply rounded-md p-3 text-xs space-y-2;
+  background: rgba(30, 32, 70, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.testInput, .testExpected {
+  @apply font-mono;
+}
+
+.testInput code, .testExpected code {
+  @apply bg-gray-800/50 px-1 py-0.5 rounded text-cyan-300;
+}
+
+.editorPanel {
+  @apply h-full flex flex-col bg-gray-900/90 relative;
+  border-left: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.editorContainer {
+  @apply flex-1 relative min-h-0;
+}
+
+.editorWrapper {
+  @apply absolute inset-0;
+}
+
+@keyframes hologramPulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
+                inset 0 0 20px rgba(99, 102, 241, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5),
+                inset 0 0 30px rgba(99, 102, 241, 0.5);
+  }
+}
+
+.navigationBar {
+  @apply fixed bottom-0 left-0 right-0 
+         bg-gray-900/90 backdrop-blur-md
+         border-t border-indigo-500/20
+         p-4 z-20;
+}
+
+.navigationButton {
+  @apply px-4 py-2 bg-indigo-600/30 
+         hover:bg-indigo-600/50 
+         rounded text-sm font-mono
+         transition-colors duration-200
+         border border-indigo-500/30
+         text-cyan-300;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    @apply grid-cols-1;
+  }
+
+  .clerkContainer {
+    height: 40vh;
+    @apply border-b border-r-0;
+  }
+
+  .editorPanel {
+    height: 60vh;
+  }
+}
+
+
+ */
+
+
+
+/* .layout {
   display: grid;
   grid-template-columns: 1fr;
   height: 100vh;
@@ -65,4 +611,4 @@
   font-size: 1.5rem;
   border-radius: 8px;
   z-index: 999;
-}
+} */

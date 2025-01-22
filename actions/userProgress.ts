@@ -236,6 +236,9 @@ export async function updateStationAttempt(
         { new: true },
       );
 
+      let xpAwarded = 0;
+      let currencyAwarded = 0;
+
       // Only award XP and currency on first completion
       if (!hasCompletedBefore) {
         await User.findByIdAndUpdate(user._id, {
@@ -244,12 +247,24 @@ export async function updateStationAttempt(
             totalCurrency: station.currencyReward,
           },
         });
+        xpAwarded = station.xpReward;
+        currencyAwarded = station.currencyReward;
+      }
 
-        // Unlock next station only on first completion
-        const nextStation = planet.stations.find(
-          (s: IDBStation) => s.order === stationOrder + 1,
-        );
-        if (nextStation) {
+      // Always check and unlock next station on successful completion
+      const nextStation = planet.stations.find(
+        (s: IDBStation) => s.order === stationOrder + 1,
+      );
+      
+      if (nextStation) {
+        const nextStationProgress = await UserProgress.findOne({
+          userId: user._id,
+          planetType,
+          stationOrder: stationOrder + 1,
+        });
+
+        // If next station is locked or doesn't exist, set it to IN_PROGRESS
+        if (!nextStationProgress || nextStationProgress.status === 'LOCKED') {
           await UserProgress.findOneAndUpdate(
             {
               userId: user._id,
@@ -268,8 +283,8 @@ export async function updateStationAttempt(
 
       return {
         progress: serializeProgress(progress),
-        xpAwarded: !hasCompletedBefore ? station.xpReward : 0,
-        currencyAwarded: !hasCompletedBefore ? station.currencyReward : 0,
+        xpAwarded,
+        currencyAwarded,
         stationsLocked: false,
       };
     }
@@ -280,6 +295,7 @@ export async function updateStationAttempt(
       currencyAwarded: 0,
       stationsLocked: false,
     };
+
   } catch (error) {
     console.error('Error updating station attempt:', error);
     throw error;
