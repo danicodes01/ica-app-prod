@@ -16,7 +16,7 @@ interface StationEditorProps {
     onReturn: () => void;
   }
   
-export default function StationEditor({
+  export default function StationEditor({
     station,
     language,
     output,
@@ -26,14 +26,13 @@ export default function StationEditor({
     onCodeSubmit,
     onReturn
   }: StationEditorProps) {
-   {
     return (
-      <div className={styles.editorPanel}>
+      <div className={styles.editorSection}>
         <div className={styles.editorContainer}>
           <div className={styles.editorWrapper}>
             <CodeEditor
               initialCode={station.challenge.initialCode}
-              height={"100%"}
+              height="100%"
               defaultLanguage={language}
               defaultValue={CODE_SNIPPETS[language]}
               onLanguageChange={onLanguageChange}
@@ -71,14 +70,14 @@ export default function StationEditor({
           </div>
         )}
   
-  <div className="flex justify-between items-center gap-4 mt-4 px-4">
+        <div className={styles.navigationBar}>
           <button
             onClick={onReturn}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm font-mono"
+            className={styles.navigationButton}
           >
             Return to Planet
           </button>
         </div>
       </div>
     );
-  }}
+  }

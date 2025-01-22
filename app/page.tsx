@@ -18,7 +18,7 @@ export default function Home() {
   }, [status, router]);
 
   if (status === 'loading') {
-    return <Loading loadingData=', Checking Authentication'/>;
+    return <Loading loadingData=', Checking Authentication 🤖, refresh if this takes too long.'/>;
   }
 
   return null;
