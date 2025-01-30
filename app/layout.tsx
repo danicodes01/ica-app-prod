@@ -14,9 +14,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Intergalactic Code Academy",
-  description: "Learn to code in space",
-};
+  metadataBase: new URL('https://ica-app-teal.vercel.app'),
+  title: {
+    template: '%s | Intergalactic Code Academy',
+    default: 'Intergalactic Code Academy',
+  },
+  description: 'Learn to code through space exploration and adventure',
+  generator: 'Next.js',
+  applicationName: 'Intergalactic Code Academy',
+  referrer: 'origin-when-cross-origin',
+  keywords: ['Code', 'Space', 'Learning', 'Programming'],
+  authors: [{ name: '@danielgene.dev' }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'Intergalactic Code Academy',
+    title: 'Intergalactic Code Academy',
+    description: 'Learn to code through space exploration and adventure',
+  },
+  verification: {
+    google: '2MWqG5T3YmtygvumhsdQ6t5pAwBYxNBqlZKapnRnbww',
+  },
+}
 
 export default function RootLayout({
   children,
