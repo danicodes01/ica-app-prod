@@ -1,15 +1,17 @@
 import { MetadataRoute } from 'next'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = 'https://ica-app-teal.vercel.app'
+  
   return [
     {
-      url: 'https://ica-app-teal.vercel.app',
+      url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: 'https://ica-app-teal.vercel.app/game',
+      url: `${baseUrl}/game`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
